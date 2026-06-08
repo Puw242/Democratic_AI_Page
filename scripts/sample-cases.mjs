@@ -268,6 +268,16 @@ function applyLocalOverrides(fileName, html) {
   return html;
 }
 
+function applyCasePageSpacing(html) {
+  const spacingCss = `
+@media(min-width:1200px){
+  header{padding-left:20vw;padding-right:20vw}
+  main{padding-left:20vw;padding-right:20vw}
+}
+`;
+  return html.replace("</style>", `${spacingCss}</style>`);
+}
+
 rmSync(outputRoot, { recursive: true, force: true });
 mkdirSync(outputCaseDir, { recursive: true });
 
@@ -322,6 +332,7 @@ const cases = uniqueMetadata.map((meta) => {
     'href="../../#case-gallery"',
   );
   html = applyLocalOverrides(fileName, html);
+  html = applyCasePageSpacing(html);
 
   writeFileSync(join(outputCaseDir, fileName), html);
 
