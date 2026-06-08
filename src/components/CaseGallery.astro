@@ -1,0 +1,97 @@
+---
+interface CaseSample {
+  id: string;
+  label: string;
+  href: string;
+  image: string;
+  question: string;
+  testType: string;
+}
+
+interface Props {
+  cases: CaseSample[];
+}
+
+const { cases } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+const prefix = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+
+const typeAbbreviations: Record<string, string> = {
+  "Counting": "CNT",
+  "Dynamic Spatial Reasoning": "DSR",
+  "Goal Oriented Navigation": "GON",
+  "Object Recognition": "OR",
+  "Scene Understanding": "SU",
+  "Static Spatial Reasoning": "SSR",
+  "Textual Understanding": "TU",
+};
+
+function abbreviateType(type: string) {
+  return (
+    typeAbbreviations[type] ??
+    type
+      .split(/\s+/)
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase()
+  );
+}
+---
+
+<section id="case-gallery" class="not-prose full-bleed mx-0 my-16 border-y border-zinc-200 bg-zinc-50 py-12 dark:border-zinc-800 dark:bg-zinc-950">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="mb-5">
+      <h2 class="m-0 text-2xl font-semibold text-zinc-950 dark:text-zinc-50">Representative Examples</h2>
+    </div>
+
+    <div data-case-gallery-grid class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        cases.map((caseItem) => (
+          <a
+            class="group overflow-hidden rounded-lg border border-zinc-200 bg-white no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:focus-visible:outline-zinc-100"
+            href={`${prefix}${caseItem.href}`}
+          >
+            <div class="flex aspect-[16/9] items-center justify-center border-b border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950">
+              <img
+                class="h-full w-full object-cover"
+                src={`${prefix}${caseItem.image}`}
+                alt={`Input image for ${caseItem.label}`}
+                loading="lazy"
+              />
+            </div>
+            <div class="flex flex-col gap-1.5 p-3">
+              <div class="flex flex-wrap gap-1">
+                <span class="rounded-md border border-zinc-300 bg-white px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100">
+                  {caseItem.label}
+                </span>
+                {
+                  caseItem.testType.split(",").map((type) => (
+                    <span class="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                      {abbreviateType(type.trim())}
+                    </span>
+                  ))
+                }
+              </div>
+              <p class="m-0 line-clamp-3 min-h-[3.75rem] text-[13px] font-medium leading-5 text-zinc-900 dark:text-zinc-100">
+                {caseItem.question}
+              </p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const grid = document.querySelector("[data-case-gallery-grid]");
+
+  if (grid) {
+    const cards = [...grid.children];
+    for (let index = cards.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [cards[index], cards[swapIndex]] = [cards[swapIndex], cards[index]];
+    }
+    grid.replaceChildren(...cards);
+  }
+</script>

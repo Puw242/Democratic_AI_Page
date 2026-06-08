@@ -1,0 +1,314 @@
+[
+  {
+    "id": "claude_case006_1",
+    "label": "Case 006",
+    "href": "cases/case_pages/claude_case006_1.html",
+    "image": "cases/assets/images/image_18345f830da4b8de.png",
+    "question": "If someone walks from the police car to the bus in 20 s, what is the speed?",
+    "testType": "Dynamic Spatial Reasoning"
+  },
+  {
+    "id": "claude_case009_1",
+    "label": "Case 009",
+    "href": "cases/case_pages/claude_case009_1.html",
+    "image": "cases/assets/images/image_093e4392dd23e0c6.png",
+    "question": "If a person jogs at 2 m/s, how long does it take to run from the first streetlight to the second?",
+    "testType": "Dynamic Spatial Reasoning"
+  },
+  {
+    "id": "claude_case085_1",
+    "label": "Case 085",
+    "href": "cases/case_pages/claude_case085_1.html",
+    "image": "cases/assets/images/image_06d670b1c79aa440.png",
+    "question": "If the robot needs to align the objects on the table evenly, how should it push the soccer ball?",
+    "testType": "Goal Oriented Navigation"
+  },
+  {
+    "id": "gemini_case252_1",
+    "label": "Case 252",
+    "href": "cases/case_pages/gemini_case252_1.html",
+    "image": "cases/assets/images/image_6e264af795796cab.png",
+    "question": "Which of the following objects is least visible in the image?",
+    "testType": "Dynamic Spatial Reasoning"
+  },
+  {
+    "id": "gpt_case360_1",
+    "label": "Case 360",
+    "href": "cases/case_pages/gpt_case360_1.html",
+    "image": "cases/assets/images/image_b7ced9474a82beb4.png",
+    "question": "I'm feeling sleepy and want to turn off the lights to sleep. What should I do?",
+    "testType": "Scene Understanding, Goal Oriented Navigation"
+  },
+  {
+    "id": "gpt_case412_1",
+    "label": "Case 412",
+    "href": "cases/case_pages/gpt_case412_1.html",
+    "image": "cases/assets/images/image_973520e3885194ff.png",
+    "question": "Is there a person in the water?",
+    "testType": "Object Recognition, Static Spatial Reasoning"
+  },
+  {
+    "id": "gpt_case502_1",
+    "label": "Case 502",
+    "href": "cases/case_pages/gpt_case502_1.html",
+    "image": "cases/assets/images/image_c2138679bb6a8b15.png",
+    "question": "Where is the little girl in the picture with respect to the plate of food?",
+    "testType": "Object Recognition"
+  },
+  {
+    "id": "internvl_case657_1",
+    "label": "Case 657",
+    "href": "cases/case_pages/internvl_case657_1.html",
+    "image": "cases/assets/images/image_7189320897c286ef.png",
+    "question": "How many windows are in the room?",
+    "testType": "Counting"
+  },
+  {
+    "id": "internvl_case670_1",
+    "label": "Case 670",
+    "href": "cases/case_pages/internvl_case670_1.html",
+    "image": "cases/assets/images/image_abcc78a131825c40.png",
+    "question": "What is the relative position of the cow with large horns to the trees in the background?",
+    "testType": "Object Recognition"
+  },
+  {
+    "id": "internvl_case680_1",
+    "label": "Case 680",
+    "href": "cases/case_pages/internvl_case680_1.html",
+    "image": "cases/assets/images/image_13ab9da34133c40e.png",
+    "question": "What is the spatial relationship between the table and chairs and the pool in this image?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "qwen_case755_1",
+    "label": "Case 755",
+    "href": "cases/case_pages/qwen_case755_1.html",
+    "image": "cases/assets/images/image_9bc223a3c0e7e414.jpg",
+    "question": "What is a producer?",
+    "testType": "Textual Understanding"
+  },
+  {
+    "id": "gemini_case020_2",
+    "label": "Case 020",
+    "href": "cases/case_pages/gemini_case020_2.html",
+    "image": "cases/assets/images/image_d2c59d0544812234.png",
+    "question": "What is the dominant feature of the image?",
+    "testType": "Scene Understanding, Object Recognition"
+  },
+  {
+    "id": "claude_case065_3",
+    "label": "Case 065",
+    "href": "cases/case_pages/claude_case065_3.html",
+    "image": "cases/assets/images/image_4b66487412b57e8f.jpg",
+    "question": "How many different devices can show a picture?",
+    "testType": "Counting, Object Recognition"
+  },
+  {
+    "id": "claude_case047_3",
+    "label": "Case 047",
+    "href": "cases/case_pages/claude_case047_3.html",
+    "image": "cases/assets/images/image_06d670b1c79aa440.png",
+    "question": "If the robot needs to align the objects on the table evenly, how should it push the soccer ball?",
+    "testType": "Goal Oriented Navigation, Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case706_1",
+    "label": "Case 706",
+    "href": "cases/case_pages/internvl_case706_1.html",
+    "image": "cases/assets/images/image_94bb90f94190bc97.png",
+    "question": "From a man's perspective, where is the house located?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case643_1",
+    "label": "Case 643",
+    "href": "cases/case_pages/internvl_case643_1.html",
+    "image": "cases/assets/images/image_202afaf9024f270c.png",
+    "question": "What is the position of the mountain in this image?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case719_1",
+    "label": "Case 719",
+    "href": "cases/case_pages/internvl_case719_1.html",
+    "image": "cases/assets/images/image_e36e8e6cc1a13573.png",
+    "question": "From this man's perspective, where is the tennis ball positioned?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case048_2",
+    "label": "Case 048",
+    "href": "cases/case_pages/gemini_case048_2.html",
+    "image": "cases/assets/images/image_cbcd8d9b9ff810af.png",
+    "question": "What is the color scheme of this bathroom?",
+    "testType": "Scene Understanding, Object Recognition"
+  },
+  {
+    "id": "gemini_case323_1",
+    "label": "Case 323",
+    "href": "cases/case_pages/gemini_case323_1.html",
+    "image": "cases/assets/images/image_4627c4d1dfed6e39.png",
+    "question": "Where is the television located in the living room?",
+    "testType": "Object Recognition"
+  },
+  {
+    "id": "internvl_case687_1",
+    "label": "Case 687",
+    "href": "cases/case_pages/internvl_case687_1.html",
+    "image": "cases/assets/images/image_c70d0c817999e7b8.png",
+    "question": "What is the relative location of the house in the image to the mountains?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case271_1",
+    "label": "Case 271",
+    "href": "cases/case_pages/gemini_case271_1.html",
+    "image": "cases/assets/images/image_7948eea30a0d5a6e.png",
+    "question": "Which object in the image is closest to the woman's hand?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case015_2",
+    "label": "Case 015",
+    "href": "cases/case_pages/gemini_case015_2.html",
+    "image": "cases/assets/images/image_aaead196dab39fdd.png",
+    "question": "What can be found in the image?",
+    "testType": "Object Recognition, Scene Understanding"
+  },
+  {
+    "id": "gemini_case221_1",
+    "label": "Case 221",
+    "href": "cases/case_pages/gemini_case221_1.html",
+    "image": "cases/assets/images/image_ac9fdb29d8497e43.png",
+    "question": "With the information available, which of the following might be a reasonable inference about the weather in the picture?",
+    "testType": "Scene Understanding"
+  },
+  {
+    "id": "internvl_case686_1",
+    "label": "Case 686",
+    "href": "cases/case_pages/internvl_case686_1.html",
+    "image": "cases/assets/images/image_513664b7d8adf963.png",
+    "question": "In the provided image, what is the position of the food relative to the man and the baby?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case673_1",
+    "label": "Case 673",
+    "href": "cases/case_pages/internvl_case673_1.html",
+    "image": "cases/assets/images/image_d4b29b828454cfc3.png",
+    "question": "What is the position of the chair in relation to the couch?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case264_1",
+    "label": "Case 264",
+    "href": "cases/case_pages/gemini_case264_1.html",
+    "image": "cases/assets/images/image_6630d9f49ad7ef0b.jpg",
+    "question": "What is closest to the tree trunk?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case684_1",
+    "label": "Case 684",
+    "href": "cases/case_pages/internvl_case684_1.html",
+    "image": "cases/assets/images/image_d1df57d4aca1ecc0.png",
+    "question": "Where is the blueberry placed on the cake?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case310_1",
+    "label": "Case 310",
+    "href": "cases/case_pages/gemini_case310_1.html",
+    "image": "cases/assets/images/image_92b93d1d34c6e80c.png",
+    "question": "Which object is the closest to the river?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case548_1",
+    "label": "Case 548",
+    "href": "cases/case_pages/internvl_case548_1.html",
+    "image": "cases/assets/images/image_9f993999152cf846.png",
+    "question": "Which hand is the man holding the tennis racket with?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "internvl_case602_1",
+    "label": "Case 602",
+    "href": "cases/case_pages/internvl_case602_1.html",
+    "image": "cases/assets/images/image_db373158865daf50.png",
+    "question": "What type of animal is grazing in the field?",
+    "testType": "Scene Understanding"
+  },
+  {
+    "id": "internvl_case638_1",
+    "label": "Case 638",
+    "href": "cases/case_pages/internvl_case638_1.html",
+    "image": "cases/assets/images/image_292868ea9cf4198b.png",
+    "question": "Where is the window located in the image?",
+    "testType": "Static Spatial Reasoning"
+  },
+  {
+    "id": "gemini_case041_2",
+    "label": "Case 041",
+    "href": "cases/case_pages/gemini_case041_2.html",
+    "image": "cases/assets/images/image_fe16718ea8175315.png",
+    "question": "What is the most frequent color shown in the image?",
+    "testType": "Scene Understanding"
+  },
+  {
+    "id": "gemini_case044_2",
+    "label": "Case 044",
+    "href": "cases/case_pages/gemini_case044_2.html",
+    "image": "cases/assets/images/image_75960afadd690eb1.png",
+    "question": "In this case, how to enter the traffic flow from the main road into the side road?",
+    "testType": "Goal Oriented Navigation, Scene Understanding"
+  },
+  {
+    "id": "gemini_case054_2",
+    "label": "Case 054",
+    "href": "cases/case_pages/gemini_case054_2.html",
+    "image": "cases/assets/images/image_8f83122bea4efea8.jpg",
+    "question": "Who is the most experienced rider in the photo?",
+    "testType": "Scene Understanding"
+  },
+  {
+    "id": "claude_case069_3",
+    "label": "Case 069",
+    "href": "cases/case_pages/claude_case069_3.html",
+    "image": "cases/assets/images/image_36ba0d01d5d56b26.jpg",
+    "question": "Carlos wants to put numbers in the number pyramid shown in such a way that each number above the bottom row is the sum of the two numbers immediately below it. What is the largest number of odd numbers that Carlos could put in the pyramid?",
+    "testType": "Static Spatial Reasoning, Counting"
+  },
+  {
+    "id": "claude_case024_3",
+    "label": "Case 024",
+    "href": "cases/case_pages/claude_case024_3.html",
+    "image": "cases/assets/images/image_646bd6d2cc624410.png",
+    "question": "If you're the one taking the picture and the woman in purple pants walks to you at 0.5 m/s, how long will it take?",
+    "testType": "Dynamic Spatial Reasoning"
+  },
+  {
+    "id": "claude_case038_3",
+    "label": "Case 038",
+    "href": "cases/case_pages/claude_case038_3.html",
+    "image": "cases/assets/images/image_253d800436c9d3c2.png",
+    "question": "What should the robotic arm lift?",
+    "testType": "Scene Understanding, Goal Oriented Navigation"
+  },
+  {
+    "id": "claude_case019_3",
+    "label": "Case 019",
+    "href": "cases/case_pages/claude_case019_3.html",
+    "image": "cases/assets/images/image_a9cfaff070bdfe5d.png",
+    "question": "If the giraffe on the right reaches the camera in 4 s, what is its speed?",
+    "testType": "Dynamic Spatial Reasoning"
+  },
+  {
+    "id": "claude_case067_3",
+    "label": "Case 067",
+    "href": "cases/case_pages/claude_case067_3.html",
+    "image": "cases/assets/images/image_e0574fd70e5c7c25.png",
+    "question": "What type of window is detected on the majority of the buildings?",
+    "testType": "Object Recognition, Counting"
+  }
+]
