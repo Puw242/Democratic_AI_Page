@@ -274,8 +274,92 @@ function applyCasePageSpacing(html) {
   header{padding-left:20vw;padding-right:20vw}
   main{padding-left:20vw;padding-right:20vw}
 }
+.option-box.gt-option{
+  border-color:#b7d8c0;
+  background:#f7fbf8;
+  color:#1f6b3a;
+  font-weight:800;
+}
+.iter h3{
+  font-size:18px;
+  font-weight:800;
+  color:#111827;
+  letter-spacing:0;
+}
+.iter-summary-title{
+  margin:0 0 7px;
+  padding:0 12px 7px;
+  border-bottom:1px solid #edf0f5;
+  color:#374151;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.block h4{font-size:15px;color:#111827}
 `;
   return html.replace("</style>", `${spacingCss}</style>`);
+}
+
+function applyCasePageLabels(html) {
+  const { document } = parseHTML(html);
+
+  for (const entry of [...document.querySelectorAll(".meta-entry")]) {
+    const label = entry.querySelector(".meta-label")?.textContent.trim();
+    if (label === "Ground Truth") {
+      const groundTruth = entry.querySelector(".meta-value")?.textContent.trim();
+      if (groundTruth) {
+        for (const option of [...document.querySelectorAll(".option-box")]) {
+          if (option.textContent.trim() === groundTruth) {
+            option.classList.add("gt-option");
+          }
+        }
+      }
+    }
+  }
+
+  for (const heading of [...document.querySelectorAll(".block h4")]) {
+    const text = heading.textContent.trim();
+    if (text === "POI") heading.textContent = "POI DELIBERATION";
+    if (text === "Judge") heading.textContent = "JUDGE DECISION";
+    if (text === "Jury") heading.textContent = "JURY VOTING";
+  }
+
+  for (const iteration of [...document.querySelectorAll(".iter")]) {
+    const iterationLabel = iteration.querySelector("h3")?.textContent.trim() || "Iteration";
+    const summary = iteration.querySelector(".iter-summary");
+    if (!summary || summary.querySelector(".iter-summary-title")) continue;
+
+    const title = document.createElement("div");
+    title.className = "iter-summary-title";
+    title.textContent = `${iterationLabel} Summary`;
+    summary.insertBefore(title, summary.firstChild);
+  }
+
+  return `<!doctype html>\n${document.documentElement.outerHTML}`;
+}
+
+function extractCaseMetrics(html) {
+  const { document } = parseHTML(html);
+
+  const baselineStatus =
+    document.querySelector(".summary-band .summary-cell:first-child .status-pill")?.textContent.trim() || "";
+
+  const iterationSummaries = [...document.querySelectorAll(".iter-summary")];
+  const finalIterationSummary = iterationSummaries.at(-1);
+  let jurorsCorrect = "";
+
+  if (finalIterationSummary) {
+    for (const item of [...finalIterationSummary.querySelectorAll(".summary-item")]) {
+      const label = item.querySelector(".summary-label")?.textContent.trim();
+      if (label === "Jurors correct") {
+        jurorsCorrect = item.querySelector(".summary-value")?.textContent.trim() || "";
+        break;
+      }
+    }
+  }
+
+  return { baselineStatus, jurorsCorrect };
 }
 
 rmSync(outputRoot, { recursive: true, force: true });
@@ -332,7 +416,9 @@ const cases = uniqueMetadata.map((meta) => {
     'href="../../#case-gallery"',
   );
   html = applyLocalOverrides(fileName, html);
+  html = applyCasePageLabels(html);
   html = applyCasePageSpacing(html);
+  const { baselineStatus, jurorsCorrect } = extractCaseMetrics(html);
 
   writeFileSync(join(outputCaseDir, fileName), html);
 
@@ -343,6 +429,8 @@ const cases = uniqueMetadata.map((meta) => {
     image: copyAsset(originalImage),
     question,
     testType,
+    baselineStatus,
+    jurorsCorrect,
   };
 });
 

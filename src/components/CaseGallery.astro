@@ -6,6 +6,8 @@ interface CaseSample {
   image: string;
   question: string;
   testType: string;
+  baselineStatus: string;
+  jurorsCorrect: string;
 }
 
 interface Props {
@@ -35,6 +37,10 @@ function abbreviateType(type: string) {
       .join("")
       .toUpperCase()
   );
+}
+
+function isCorrectStatus(status: string) {
+  return status.toLowerCase() === "correct";
 }
 ---
 
@@ -71,6 +77,21 @@ function abbreviateType(type: string) {
                     </span>
                   ))
                 }
+              </div>
+              <div class="flex flex-wrap gap-1">
+                <span
+                  class:list={[
+                    "rounded-md border px-1.5 py-0 text-[10px] font-semibold leading-4",
+                    isCorrectStatus(caseItem.baselineStatus)
+                      ? "border-[#b7d8c0] bg-[#f7fbf8] text-[#1f6b3a]"
+                      : "border-red-200 bg-red-50 text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-300",
+                  ]}
+                >
+                  Baseline {caseItem.baselineStatus}
+                </span>
+                <span class="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                  Jury {caseItem.jurorsCorrect}
+                </span>
               </div>
               <p class="m-0 line-clamp-3 min-h-[3.75rem] text-[13px] font-medium leading-5 text-zinc-900 dark:text-zinc-100">
                 {caseItem.question}
