@@ -7,6 +7,7 @@ interface CaseSample {
   question: string;
   testType: string;
   baselineStatus: string;
+  pipelineStatus: string;
   jurorsCorrect: string;
 }
 
@@ -18,30 +19,44 @@ const { cases } = Astro.props;
 const baseUrl = import.meta.env.BASE_URL;
 const prefix = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 
-const typeAbbreviations: Record<string, string> = {
-  "Counting": "CNT",
-  "Dynamic Spatial Reasoning": "DSR",
-  "Goal Oriented Navigation": "GON",
-  "Object Recognition": "OR",
-  "Scene Understanding": "SU",
-  "Static Spatial Reasoning": "SSR",
-  "Textual Understanding": "TU",
-};
-
-function abbreviateType(type: string) {
-  return (
-    typeAbbreviations[type] ??
-    type
-      .split(/\s+/)
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-  );
-}
-
-function isCorrectStatus(status: string) {
+function isCorrect(status: string) {
   return status.toLowerCase() === "correct";
 }
+
+function isWrong(status: string) {
+  return status.toLowerCase() === "wrong";
+}
+
+const caseGroups = [
+  {
+    labelStart: "Baseline",
+    from: "Wrong",
+    connector: "→",
+    labelEnd: "Final",
+    to: "Correct",
+    cases: cases.filter((caseItem) => isWrong(caseItem.baselineStatus) && isCorrect(caseItem.pipelineStatus)),
+  },
+  {
+    labelStart: "Baseline",
+    from: "Correct",
+    connector: "→",
+    labelEnd: "Final",
+    to: "Wrong",
+    cases: cases.filter((caseItem) => isCorrect(caseItem.baselineStatus) && isWrong(caseItem.pipelineStatus)),
+  },
+  {
+    labelStart: "Unchanged",
+    from: "",
+    connector: "",
+    labelEnd: "",
+    to: "",
+    cases: cases.filter(
+      (caseItem) =>
+        (isCorrect(caseItem.baselineStatus) && isCorrect(caseItem.pipelineStatus)) ||
+        (isWrong(caseItem.baselineStatus) && isWrong(caseItem.pipelineStatus)),
+    ),
+  },
+];
 ---
 
 <section id="case-gallery" class="not-prose full-bleed mx-0 my-16 border-y border-zinc-200 bg-zinc-50 py-12 dark:border-zinc-800 dark:bg-zinc-950">
@@ -50,54 +65,101 @@ function isCorrectStatus(status: string) {
       <h2 class="m-0 text-2xl font-semibold text-zinc-950 dark:text-zinc-50">Representative Examples</h2>
     </div>
 
-    <div data-case-gallery-grid class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="space-y-7">
       {
-        cases.map((caseItem) => (
-          <a
-            class="group overflow-hidden rounded-lg border border-zinc-200 bg-white no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:focus-visible:outline-zinc-100"
-            href={`${prefix}${caseItem.href}`}
-          >
-            <div class="flex aspect-[16/9] items-center justify-center border-b border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950">
-              <img
-                class="h-full w-full object-cover"
-                src={`${prefix}${caseItem.image}`}
-                alt={`Input image for ${caseItem.label}`}
-                loading="lazy"
-              />
-            </div>
-            <div class="flex flex-col gap-1.5 p-3">
-              <div class="flex flex-wrap gap-1">
-                <span class="rounded-md border border-zinc-300 bg-white px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100">
-                  {caseItem.label}
-                </span>
+        caseGroups.map((group) => (
+          <section aria-label={[group.labelStart, group.from, group.connector, group.labelEnd, group.to].filter(Boolean).join(" ")}>
+            <div class="mb-2 flex items-baseline gap-2">
+              <h3 class="m-0 flex flex-wrap items-baseline gap-1.5 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                <span>{group.labelStart}</span>
                 {
-                  caseItem.testType.split(",").map((type) => (
-                    <span class="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-                      {abbreviateType(type.trim())}
+                  group.from && (
+                    <span
+                      class:list={[
+                        "font-bold",
+                        group.from === "Correct"
+                          ? "text-[#1f6b3a]"
+                          : "text-red-700 dark:text-red-300",
+                      ]}
+                    >
+                      {group.from}
                     </span>
+                  )
+                }
+                {group.connector && <span class="text-zinc-400">{group.connector}</span>}
+                {group.labelEnd && <span>{group.labelEnd}</span>}
+                {
+                  group.to && (
+                    <span
+                      class:list={[
+                        "font-bold",
+                        group.to === "Correct"
+                          ? "text-[#1f6b3a]"
+                          : "text-red-700 dark:text-red-300",
+                      ]}
+                    >
+                      {group.to}
+                    </span>
+                  )
+                }
+              </h3>
+              <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">{group.cases.length} cases</span>
+            </div>
+            <div class="relative">
+              <button
+                type="button"
+                data-scroll-left
+                class="absolute left-1 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/75 text-zinc-400 shadow-sm backdrop-blur transition hover:border-zinc-300 hover:bg-white hover:text-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 sm:flex dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-500 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 dark:focus-visible:outline-zinc-100"
+                aria-label="Scroll left"
+              >
+                <span aria-hidden="true">‹</span>
+              </button>
+              <button
+                type="button"
+                data-scroll-right
+                class="absolute right-1 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white/75 text-zinc-400 shadow-sm backdrop-blur transition hover:border-zinc-300 hover:bg-white hover:text-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 sm:flex dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-500 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-200 dark:focus-visible:outline-zinc-100"
+                aria-label="Scroll right"
+              >
+                <span aria-hidden="true">›</span>
+              </button>
+              <div data-case-gallery-row class="flex gap-3 overflow-x-auto pb-2">
+                {
+                  group.cases.map((caseItem) => (
+                    <a
+                      class="group w-[17rem] shrink-0 overflow-hidden rounded-lg border border-zinc-200 bg-white no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600 dark:focus-visible:outline-zinc-100"
+                      href={`${prefix}${caseItem.href}`}
+                    >
+                      <div class="flex aspect-[16/9] items-center justify-center border-b border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950">
+                        <img
+                          class="h-full w-full object-cover"
+                          src={`${prefix}${caseItem.image}`}
+                          alt={`Input image for ${caseItem.label}`}
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="flex flex-col gap-1.5 p-3">
+                        <div class="flex flex-wrap gap-1">
+                          <span class="rounded-md border border-zinc-300 bg-white px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100">
+                            {caseItem.label}
+                          </span>
+                          {
+                            caseItem.testType.split(",").map((type) => (
+                              <span class="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                                {type.trim()}
+                              </span>
+                            ))
+                          }
+                        </div>
+                        <p class="m-0 line-clamp-3 min-h-[3.75rem] text-[13px] font-medium leading-5 text-zinc-900 dark:text-zinc-100">
+                          {caseItem.question}
+                        </p>
+                      </div>
+                    </a>
                   ))
                 }
               </div>
-              <div class="flex flex-wrap gap-1">
-                <span
-                  class:list={[
-                    "rounded-md border px-1.5 py-0 text-[10px] font-semibold leading-4",
-                    isCorrectStatus(caseItem.baselineStatus)
-                      ? "border-[#b7d8c0] bg-[#f7fbf8] text-[#1f6b3a]"
-                      : "border-red-200 bg-red-50 text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-300",
-                  ]}
-                >
-                  Baseline {caseItem.baselineStatus}
-                </span>
-                <span class="rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0 text-[10px] font-semibold leading-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-                  Jury {caseItem.jurorsCorrect}
-                </span>
-              </div>
-              <p class="m-0 line-clamp-3 min-h-[3.75rem] text-[13px] font-medium leading-5 text-zinc-900 dark:text-zinc-100">
-                {caseItem.question}
-              </p>
             </div>
-          </a>
+          </section>
         ))
       }
     </div>
@@ -105,14 +167,25 @@ function isCorrectStatus(status: string) {
 </section>
 
 <script>
-  const grid = document.querySelector("[data-case-gallery-grid]");
+  const rows = document.querySelectorAll("[data-case-gallery-row]");
 
-  if (grid) {
-    const cards = [...grid.children];
+  for (const row of rows) {
+    const cards = [...row.children];
     for (let index = cards.length - 1; index > 0; index -= 1) {
       const swapIndex = Math.floor(Math.random() * (index + 1));
       [cards[index], cards[swapIndex]] = [cards[swapIndex], cards[index]];
     }
-    grid.replaceChildren(...cards);
+    row.replaceChildren(...cards);
   }
+
+  document.querySelectorAll("[data-scroll-left], [data-scroll-right]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const container = button.closest(".relative");
+      const row = container?.querySelector("[data-case-gallery-row]");
+      if (!row) return;
+
+      const direction = button.hasAttribute("data-scroll-left") ? -1 : 1;
+      row.scrollBy({ left: direction * Math.max(280, row.clientWidth * 0.8), behavior: "smooth" });
+    });
+  });
 </script>

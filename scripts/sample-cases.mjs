@@ -53,6 +53,7 @@ const additionalSelections = [
   { displayId: "Case 041", rawId: "1_2947", source: "Gemini" },
   { displayId: "Case 044", rawId: "261_0_Spatial_Interaction", source: "Gemini" },
   { displayId: "Case 054", rawId: "VWfKcAKJSwowZ7bGBCTpc6", source: "Gemini" },
+  { displayId: "Case 099", rawId: "71_0_Dynamic_Reasoning", source: "Gemini" },
   { displayId: "Case 069", rawId: "3409", source: "Claude" },
   { displayId: "Case 024", rawId: "38_0_Dynamic_Reasoning", source: "Claude" },
   { displayId: "Case 038", rawId: "245_0_Dynamic_Reasoning", source: "Claude" },
@@ -63,6 +64,9 @@ const additionalSelections = [
 const outputRoot = "public/cases";
 const outputCaseDir = join(outputRoot, "case_pages");
 const outputDataFile = "src/data/caseSamples.json";
+const depthOverrides = new Map([
+  ["15_1_Dynamic_Reasoning", join(repoRoot, "..", "depth", "supp_ds_depth", "15_1_Dynamic_Reasoning.jpg")],
+]);
 
 function ensureDir(filePath) {
   mkdirSync(dirname(filePath), { recursive: true });
@@ -100,21 +104,45 @@ function copyAsset(relativeHref) {
   if (!sourcePath.startsWith(join(visualizationRoot, "assets"))) {
     throw new Error(`Refusing to copy asset outside source assets: ${cleanHref}`);
   }
+  const publicHref = cleanHref.replace("../", "cases/");
+  const outputPath = join("public", publicHref);
+  if (!existsSync(sourcePath) && existsSync(outputPath)) {
+    return publicHref;
+  }
   if (!existsSync(sourcePath)) {
     throw new Error(`Missing asset referenced by case page: ${cleanHref}`);
   }
 
-  const publicHref = cleanHref.replace("../", "cases/");
-  const outputPath = join("public", publicHref);
   ensureDir(outputPath);
   copyFileSync(sourcePath, outputPath);
   return publicHref;
+}
+
+function applyDepthOverride(html, rawId) {
+  const overridePath = depthOverrides.get(String(rawId));
+  if (!overridePath) return html;
+  if (!existsSync(overridePath)) {
+    throw new Error(`Missing depth override for ${rawId}: ${overridePath}`);
+  }
+
+  const fileName = overridePath.split("/").at(-1);
+  const publicHref = `cases/assets/depth_maps/${fileName}`;
+  const outputPath = join("public", publicHref);
+  ensureDir(outputPath);
+  copyFileSync(overridePath, outputPath);
+
+  const { document } = parseHTML(html);
+  for (const image of [...document.querySelectorAll(".depth-evidence .evidence-stage > img:first-child")]) {
+    image.setAttribute("src", `../assets/depth_maps/${fileName}`);
+  }
+  return `<!doctype html>\n${document.documentElement.outerHTML}`;
 }
 
 function selectedFolders() {
   return readdirSync(selectedCaseRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
+    .filter((name) => displayNumber(name) !== "099")
     .sort((a, b) => displayNumber(a).localeCompare(displayNumber(b), undefined, { numeric: true }));
 }
 
@@ -344,6 +372,8 @@ function extractCaseMetrics(html) {
 
   const baselineStatus =
     document.querySelector(".summary-band .summary-cell:first-child .status-pill")?.textContent.trim() || "";
+  const pipelineStatus =
+    document.querySelector(".summary-band .summary-cell:nth-child(3) .status-pill")?.textContent.trim() || "";
 
   const iterationSummaries = [...document.querySelectorAll(".iter-summary")];
   const finalIterationSummary = iterationSummaries.at(-1);
@@ -359,7 +389,7 @@ function extractCaseMetrics(html) {
     }
   }
 
-  return { baselineStatus, jurorsCorrect };
+  return { baselineStatus, pipelineStatus, jurorsCorrect };
 }
 
 rmSync(outputRoot, { recursive: true, force: true });
@@ -408,6 +438,7 @@ const cases = uniqueMetadata.map((meta) => {
     ),
   );
 
+  html = applyDepthOverride(html, meta.id);
   const assetRefs = new Set([...html.matchAll(/(?:src|href)="(\.\.\/assets\/[^"]+)"/g)].map((match) => match[1]));
   for (const assetRef of assetRefs) copyAsset(assetRef);
 
@@ -418,7 +449,7 @@ const cases = uniqueMetadata.map((meta) => {
   html = applyLocalOverrides(fileName, html);
   html = applyCasePageLabels(html);
   html = applyCasePageSpacing(html);
-  const { baselineStatus, jurorsCorrect } = extractCaseMetrics(html);
+  const { baselineStatus, pipelineStatus, jurorsCorrect } = extractCaseMetrics(html);
 
   writeFileSync(join(outputCaseDir, fileName), html);
 
@@ -430,6 +461,7 @@ const cases = uniqueMetadata.map((meta) => {
     question,
     testType,
     baselineStatus,
+    pipelineStatus,
     jurorsCorrect,
   };
 });
