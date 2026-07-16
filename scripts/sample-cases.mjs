@@ -348,7 +348,7 @@ function applyCasePageLabels(html) {
 
   for (const heading of [...document.querySelectorAll(".block h4")]) {
     const text = heading.textContent.trim();
-    if (text === "POI") heading.textContent = "POI DELIBERATION";
+    if (text === "POI") heading.textContent = "Advocacy";
     if (text === "Judge") heading.textContent = "JUDGE DECISION";
     if (text === "Jury") heading.textContent = "JURY VOTING";
   }
